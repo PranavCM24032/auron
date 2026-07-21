@@ -14,10 +14,10 @@ export const FAQS_DATA: FaqItem[] = [
   },
   {
     "question": "How do I contact the executive committee members?",
-    "answer": "You can reach out to us by filling out the Contact Us form on this website, or connect directly with our office bearers via their LinkedIn profiles linked in the Committee section."
+    "answer": "You can reach out to us by filling out the Contact Us form on this website, or connect directly with any executive member via their LinkedIn profiles linked in the Committee section."
   },
   {
     "question": "Can I propose a new student-led project or workshop?",
-    "answer": "Absolutely! Auron is a student-driven initiative. You can submit a project proposal or workshop pitch to our Technical Head (Pranav) or contact us using the form to schedule a pitch meeting."
+    "answer": "Absolutely! Auron is a student-driven initiative. You can submit a project proposal or workshop pitch to any executive member or contact us using the email to schedule a pitch meeting."
   }
 ];

@@ -36,25 +36,42 @@ export default function Contact() {
 
     setLoading(true);
     try {
-      await emailjs.sendForm(
+      await emailjs.send(
         SERVICE_ID,
         TEMPLATE_ID,
-        formRef.current!,
+        {
+          from_name: name,
+          from_email: email,
+          user_name: name,
+          user_email: email,
+          reply_to: email,
+          to_email: "auron.sbjitmr@gmail.com",
+          message: message,
+        },
         PUBLIC_KEY
       );
       setStatus({ type: "success", text: "Message sent successfully! We will get back to you soon." });
       setName("");
       setEmail("");
       setMessage("");
-    } catch {
-      setStatus({ type: "error", text: "Failed to send message. Please try again later." });
+    } catch (err: unknown) {
+      console.error("EmailJS Submission Error:", err);
+      const errObj = err as { text?: string; status?: number; message?: string };
+      const detail = errObj.text || errObj.message || (typeof err === "string" ? err : "");
+      
+      setStatus({ 
+        type: "error", 
+        text: detail 
+          ? `EmailJS Error (${errObj.status || "API"}): ${detail}. Please check your .env.local EmailJS credentials.` 
+          : "Failed to send message via EmailJS. Please try again or use direct email." 
+      });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <section className="section-padding" style={{ background: "var(--bg-secondary)" }}>
+    <section className="section-padding contact-section" style={{ background: "var(--bg-secondary)" }}>
       <div className="container" style={{ maxWidth: "700px", margin: "0 auto" }}>
         <div className="section-header" style={{ marginBottom: "40px" }}>
           <span className="section-subtitle">Get In Touch</span>
@@ -128,6 +145,16 @@ export default function Contact() {
               {status.text}
             </div>
           )}
+
+          <div style={{ textAlign: "center", marginTop: "20px", fontSize: "0.85rem", color: "var(--text-muted)" }}>
+            Or email us directly at{" "}
+            <a 
+              href="mailto:auron.sbjitmr@gmail.com" 
+              style={{ color: "var(--color-gold)", textDecoration: "underline" }}
+            >
+              auron.sbjitmr@gmail.com
+            </a>
+          </div>
         </div>
       </div>
     </section>

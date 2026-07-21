@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
@@ -8,12 +8,18 @@ import Image from "next/image";
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isDark, setIsDark] = useState(true);
   const pathname = usePathname();
 
   useEffect(() => {
-    // Theme setup from localStorage (fallback to dark theme default)
-    const savedTheme = localStorage.getItem("theme") || "dark";
-    document.documentElement.setAttribute("data-theme", savedTheme);
+    const savedTheme = localStorage.getItem("theme");
+    const shouldBeDark = savedTheme ? savedTheme === "dark" : true;
+    setIsDark(shouldBeDark);
+    if (shouldBeDark) {
+      document.documentElement.removeAttribute("data-theme");
+    } else {
+      document.documentElement.setAttribute("data-theme", "light");
+    }
 
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
@@ -21,6 +27,19 @@ export default function Navbar() {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const toggleTheme = useCallback(() => {
+    setIsDark((prev) => {
+      const next = !prev;
+      localStorage.setItem("theme", next ? "dark" : "light");
+      if (next) {
+        document.documentElement.removeAttribute("data-theme");
+      } else {
+        document.documentElement.setAttribute("data-theme", "light");
+      }
+      return next;
+    });
   }, []);
 
   const navLinks = [
@@ -62,10 +81,60 @@ export default function Navbar() {
               </Link>
             );
           })}
+
+          {/* Theme toggle inside mobile menu on small screens */}
+          <div className="mobile-theme-toggle-wrap">
+            <button
+              className="theme-toggle"
+              onClick={toggleTheme}
+              aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+            >
+              {isDark ? (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="5" />
+                  <line x1="12" y1="1" x2="12" y2="3" />
+                  <line x1="12" y1="21" x2="12" y2="23" />
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                  <line x1="1" y1="12" x2="3" y2="12" />
+                  <line x1="21" y1="12" x2="23" y2="12" />
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg>
+              )}
+            </button>
+          </div>
         </nav>
 
-        {/* Controls containing Mobile Hamburger */}
+        {/* Controls containing Theme Toggle + Mobile Hamburger */}
         <div className="nav-controls">
+          <button
+            className="theme-toggle"
+            onClick={toggleTheme}
+            aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            {isDark ? (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="5" />
+                <line x1="12" y1="1" x2="12" y2="3" />
+                <line x1="12" y1="21" x2="12" y2="23" />
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                <line x1="1" y1="12" x2="3" y2="12" />
+                <line x1="21" y1="12" x2="23" y2="12" />
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+              </svg>
+            )}
+          </button>
           <button
             className={`hamburger ${mobileMenuOpen ? "active" : ""}`}
             id="hamburger"
@@ -78,6 +147,14 @@ export default function Navbar() {
           </button>
         </div>
       </div>
+
+      {/* Mobile backdrop overlay */}
+      {mobileMenuOpen && (
+        <div
+          className="mobile-menu-backdrop"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
     </header>
   );
 }

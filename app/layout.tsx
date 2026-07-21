@@ -32,22 +32,80 @@ const plusJakartaSans = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "AURON Forum | Technical & Non-Technical Executive Committee, Events & Workshops",
-  description: "Official website of AURON, the premier Technical & Non-Technical Forum. Discover our vision, committee, events, workshops, and register to join our community.",
-  keywords: ["Auron Forum", "Department Forum", "Technical Wing", "Non-Technical Wing", "Hackathons", "Management", "Creative Design"],
-  authors: [{ name: "Auron Forum" }],
+  metadataBase: new URL("https://auronforum.com"),
+  title: {
+    default: "AURON Forum | Technical & Non-Technical Executive Committee, Events & Workshops",
+    template: "%s | AURON Forum",
+  },
+  description: "Official website of AURON Forum at S.B. Jain Institute of Technology, Management and Research, Nagpur. Discover our vision, committee, hackathons, workshops, and student opportunities.",
+  keywords: [
+    "Auron Forum",
+    "SBJITMR",
+    "Department Forum Nagpur",
+    "Technical Wing",
+    "Non-Technical Wing",
+    "Campus Hackathons",
+    "Student Engineering Forum",
+    "Computer Science Workshops",
+    "Project Mentorship",
+  ],
+  authors: [{ name: "AURON Forum Committee" }],
+  creator: "AURON Technical Forum",
+  publisher: "AURON Technical Forum",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: "AURON Forum | Technical & Non-Technical Community",
-    description: "Official website of AURON, the premier Technical & Non-Technical Forum. Discover our vision, committee, events, workshops, and register to join our community.",
-    type: "website",
-    locale: "en_US",
+    description: "Official website of AURON Forum at S.B. Jain Institute of Technology. Explore our events, committee members, achievements, and technical workshops.",
+    url: "https://auronforum.com",
     siteName: "AURON Forum",
+    images: [
+      {
+        url: "/logo.jpg",
+        width: 1200,
+        height: 630,
+        alt: "AURON Technical Forum Logo",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "AURON Forum | Technical & Non-Technical Community",
-    description: "Official website of AURON, the premier Technical & Non-Technical Forum. Discover our vision, committee, events, workshops, and register to join our community.",
+    description: "Official website of AURON Forum at S.B. Jain Institute of Technology. Explore our events, committee members, achievements, and technical workshops.",
+    images: ["/logo.jpg"],
   },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "EducationalOrganization",
+  name: "AURON Technical Forum",
+  url: "https://auronforum.com",
+  logo: "https://auronforum.com/logo.jpg",
+  description: "Official student technical and non-technical forum of S.B. Jain Institute of Technology, Management and Research, Nagpur.",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Nagpur",
+    addressRegion: "Maharashtra",
+    addressCountry: "India",
+  },
+  sameAs: [
+    "https://linkedin.com",
+    "https://github.com",
+  ],
 };
 
 export default function RootLayout({
@@ -57,6 +115,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${cinzel.variable} ${plusJakartaSans.variable}`}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){var t=localStorage.getItem('theme');if(t==='light'){document.documentElement.setAttribute('data-theme','light');}})();`,
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className="antialiased">
         <div className="background-grain" />
 

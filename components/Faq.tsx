@@ -21,6 +21,7 @@ export default function Faq() {
             className={`faq-item ${isActive ? "active" : ""}`}
           >
             <button 
+              type="button"
               className="faq-question"
               onClick={() => toggleFaq(idx)}
               aria-expanded={isActive}

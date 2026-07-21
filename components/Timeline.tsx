@@ -5,60 +5,52 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Flag, Lightbulb, Code, Trophy } from "lucide-react";
 
+import { PAST_EVENTS_DATA, UPCOMING_EVENTS_DATA } from "@/data/events";
+
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
+const getEventIcon = (category: string) => {
+  const cat = category.toLowerCase();
+  if (cat.includes("hackathon") || cat.includes("ideathon")) return Trophy;
+  if (cat.includes("workshop") || cat.includes("bootcamp")) return Code;
+  if (cat.includes("seminar")) return Lightbulb;
+  return Flag;
+};
+
+const MONTHS: Record<string, number> = {
+  jan: 0, january: 0, feb: 1, february: 1, mar: 2, march: 2,
+  apr: 3, april: 3, may: 4, jun: 5, june: 5,
+  jul: 6, july: 6, aug: 7, august: 7, sep: 8, sept: 8, september: 8,
+  oct: 9, october: 9, nov: 10, november: 10, dec: 11, december: 11,
+};
+
+function parseEventDate(dateStr: string): number {
+  const lower = dateStr.toLowerCase().trim();
+  const yearMatch = lower.match(/\d{4}/);
+  const year = yearMatch ? parseInt(yearMatch[0]) : 2026;
+  for (const [key, monthIdx] of Object.entries(MONTHS)) {
+    if (lower.includes(key)) return new Date(year, monthIdx).getTime();
+  }
+  const fallback = new Date(lower).getTime();
+  return isNaN(fallback) ? 0 : fallback;
+}
+
 const TIMELINE_DATA = [
-  {
-    date: "Dec 2024",
-    heading: "Nexus Foundation",
-    text: "Department forum initialized with 15 core committee members, establishing isolated Technical and Non-Technical operational wings.",
-    icon: Flag,
-  },
-  {
-    date: "Feb 2025",
-    heading: "Ideathon Conclave",
-    text: "Launched first campus-wide challenge, generating 40+ prototype blueprints targeting clean energy and civic tech.",
-    icon: Lightbulb,
-  },
-  {
-    date: "May 2025",
-    heading: "AI & Design Workshops",
-    text: "Conducted masterclasses on Next.js structures, Figma UI designs, and REST API systems for department students.",
-    icon: Code,
-  },
-  {
-    date: "Sept 2025",
-    heading: "National Hackfest",
-    text: "Hosted the national level hackathon conclave, welcoming external mentors, judges, and corporate sponsorships.",
-    icon: Trophy,
-  },
-  {
-    date: "Jul 25, 2026",
-    heading: "Forum Installation Ceremony",
-    text: "Official installation of Auron's new forum body — marking the start of a fresh leadership term and renewed community vision.",
-    icon: Flag,
-  },
-  {
-    date: "Aug 29, 2026",
-    heading: "Intra-College Hackathon",
-    text: "An internal hackathon challenging teams within the college to build innovative projects under time constraints.",
-    icon: Code,
-  },
-  {
-    date: "Sept 1, 2026",
-    heading: "Career Guidance Seminar",
-    text: "Industry professionals share insights on career pathways, resume building, interview strategies, and emerging job markets.",
-    icon: Lightbulb,
-  },
-  {
-    date: "Oct 7, 2026",
-    heading: "Inter-College Hackathon",
-    text: "A competitive inter-college hackathon bringing together teams from multiple institutions to innovate and compete.",
-    icon: Trophy,
-  },
-];
+  ...PAST_EVENTS_DATA.map((e) => ({
+    date: e.date,
+    heading: e.title,
+    text: e.description,
+    icon: getEventIcon(e.tag || e.category),
+  })),
+  ...UPCOMING_EVENTS_DATA.map((e) => ({
+    date: e.date,
+    heading: e.title,
+    text: e.description,
+    icon: getEventIcon(e.category),
+  })),
+].sort((a, b) => parseEventDate(a.date) - parseEventDate(b.date));
 
 export default function Timeline() {
   const progressBarRef = useRef<HTMLDivElement>(null);

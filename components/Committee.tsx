@@ -26,7 +26,7 @@ export default function Committee() {
     const el = sparklesRef.current;
     if (!el) return;
     el.innerHTML = "";
-    for (let i = 0; i < 12; i++) createSparkle(el);
+    for (let i = 0; i < 4; i++) createSparkle(el);
   }, []);
 
   const advisorRef = useRef<HTMLDivElement>(null);
