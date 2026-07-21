@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Faq from "@/components/Faq";
 
 export const metadata: Metadata = {
-  title: "Frequently Asked Questions | AURON Forum",
+  title: "Frequently Asked Questions",
   description: "Get quick answers about forum registration, technical sprints, guest seminars, project mentoring, and non-technical management challenges.",
 };
 

@@ -13,14 +13,7 @@ interface LightboxProps {
 }
 
 export default function Lightbox({ isOpen, onClose, initialIndex, images }: LightboxProps) {
-  // Derived state pattern to sync currentIndex when initialIndex or isOpen changes
-  const [prevInitialIndex, setPrevInitialIndex] = useState(initialIndex);
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
-
-  if (initialIndex !== prevInitialIndex) {
-    setPrevInitialIndex(initialIndex);
-    setCurrentIndex(initialIndex);
-  }
 
   const animateImageTransition = () => {
     gsap.fromTo(
@@ -87,7 +80,6 @@ export default function Lightbox({ isOpen, onClose, initialIndex, images }: Ligh
           height={800}
           className="max-w-full max-h-full object-contain"
           unoptimized
-          priority
         />
         <div className="lightbox-caption">{activeImage.title}</div>
       </div>

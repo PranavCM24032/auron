@@ -29,24 +29,13 @@ export default function Committee() {
     for (let i = 0; i < 4; i++) createSparkle(el);
   }, []);
 
-  const advisorRef = useRef<HTMLDivElement>(null);
-  const primaryRef = useRef<HTMLDivElement>(null);
-  const secondaryRef = useRef<HTMLDivElement>(null);
-  const tertiaryRef = useRef<HTMLDivElement>(null);
-
   // Filters committee data
-  const wingMap = {
-    all: 'advisor',
-    technical: 'technical',
-    'non-technical': 'non-technical'
-  } as const;
-
   const filteredMembers = COMMITTEE_DATA.filter((m) => {
-    const targetWing = wingMap[selectedWing];
-    return m.wing === targetWing;
+    if (selectedWing === 'all') return true;
+    return m.wing === selectedWing;
   });
 
-  const getMembersByTier = (tier: string) => {
+  const getMembersByTier = (tier: CommitteeMember['tier']) => {
     return filteredMembers.filter(m => m.tier === tier);
   };
 
@@ -110,25 +99,25 @@ export default function Committee() {
 
         <div className="bearers-hierarchy" id="bearers-hierarchy-container">
           {/* Tier: Advisor */}
-          <div ref={advisorRef} className="tier-advisor">
+          <div className="tier-advisor">
             {getMembersByTier('advisor').map((m) => (
               <CommitteeCard key={m.id} member={m} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} />
             ))}
           </div>
           {/* Tier: Primary */}
-          <div ref={primaryRef} className="tier-primary">
+          <div className="tier-primary">
             {getMembersByTier('primary').map((m) => (
               <CommitteeCard key={m.id} member={m} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} />
             ))}
           </div>
           {/* Tier: Secondary */}
-          <div ref={secondaryRef} className="tier-secondary">
+          <div className="tier-secondary">
             {getMembersByTier('secondary').map((m) => (
               <CommitteeCard key={m.id} member={m} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} />
             ))}
           </div>
           {/* Tier: Tertiary */}
-          <div ref={tertiaryRef} className="tier-tertiary">
+          <div className="tier-tertiary">
             {getMembersByTier('tertiary').map((m) => (
               <CommitteeCard key={m.id} member={m} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} />
             ))}

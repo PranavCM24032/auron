@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import gsap from "gsap";
 
 interface LoaderProps {
@@ -9,6 +9,11 @@ interface LoaderProps {
 
 export default function Loader({ onComplete }: LoaderProps) {
   const [percent, setPercent] = useState(0);
+  const onCompleteRef = useRef(onComplete);
+
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
 
   useEffect(() => {
     const progress = { val: 0 };
@@ -24,7 +29,7 @@ export default function Loader({ onComplete }: LoaderProps) {
           opacity: 0,
           duration: 0.4,
           ease: "power2.inOut",
-          onComplete: onComplete,
+          onComplete: () => onCompleteRef.current(),
         });
       },
     });
@@ -32,7 +37,7 @@ export default function Loader({ onComplete }: LoaderProps) {
     return () => {
       tween.kill();
     };
-  }, [onComplete]);
+  }, []);
 
   return (
     <div className="loader-wrapper" id="loader">

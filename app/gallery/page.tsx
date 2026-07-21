@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import GalleryPageClient from "@/components/GalleryPageClient";
 
 export const metadata: Metadata = {
-  title: "Media Gallery | AURON Forum",
+  title: "Media Gallery",
   description: "Browse photographs and highlights from past hackathons, ideathons, and seminars organized by the AURON Forum.",
 };
 

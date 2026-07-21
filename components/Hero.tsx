@@ -4,6 +4,49 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
+class Particle {
+  x: number;
+  y: number;
+  directionX: number;
+  directionY: number;
+  size: number;
+  color: string;
+
+  constructor(x: number, y: number, dX: number, dY: number, size: number, color: string) {
+    this.x = x;
+    this.y = y;
+    this.directionX = dX;
+    this.directionY = dY;
+    this.size = size;
+    this.color = color;
+  }
+
+  draw(ctx: CanvasRenderingContext2D) {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+    ctx.fillStyle = this.color;
+    ctx.fill();
+  }
+
+  update(canvas: HTMLCanvasElement, mouse: { x: number | null; y: number | null; radius: number }) {
+    if (this.x > canvas.width || this.x < 0) this.directionX = -this.directionX;
+    if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
+
+    if (mouse.x !== null && mouse.y !== null) {
+      const dx = mouse.x - this.x;
+      const dy = mouse.y - this.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      if (distance < mouse.radius) {
+        const force = (mouse.radius - distance) / mouse.radius;
+        this.x -= (dx / distance) * force * 15;
+        this.y -= (dy / distance) * force * 15;
+      }
+    }
+
+    this.x += this.directionX;
+    this.y += this.directionY;
+  }
+}
 
 export default function Hero() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -39,56 +82,6 @@ export default function Hero() {
     if (heroSection) {
       heroSection.addEventListener("mousemove", handleMouseMove);
       heroSection.addEventListener("mouseleave", handleMouseLeave);
-    }
-
-    class Particle {
-      x: number;
-      y: number;
-      directionX: number;
-      directionY: number;
-      size: number;
-      color: string;
-
-      constructor(x: number, y: number, dX: number, dY: number, size: number, color: string) {
-        this.x = x;
-        this.y = y;
-        this.directionX = dX;
-        this.directionY = dY;
-        this.size = size;
-        this.color = color;
-      }
-
-      draw() {
-        if (!ctx) return;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
-        ctx.fillStyle = this.color;
-        ctx.fill();
-      }
-
-      update() {
-        if (!canvas) return;
-        if (this.x > canvas.width || this.x < 0) this.directionX = -this.directionX;
-        if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
-
-        // Mouse repulsion physics
-        if (mouse.x !== null && mouse.y !== null) {
-          const dx = mouse.x - this.x;
-          const dy = mouse.y - this.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          if (distance < mouse.radius) {
-            const force = (mouse.radius - distance) / mouse.radius;
-            const forceX = (dx / distance) * force * 15;
-            const forceY = (dy / distance) * force * 15;
-            this.x -= forceX;
-            this.y -= forceY;
-          }
-        }
-
-        this.x += this.directionX;
-        this.y += this.directionY;
-        this.draw();
-      }
     }
 
     const initParticles = () => {
@@ -135,10 +128,15 @@ export default function Hero() {
     };
 
     let frameId: number;
+    let frameCount = 0;
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particlesArray.forEach((p) => p.update());
-      connectParticles();
+      particlesArray.forEach((p) => {
+        p.update(canvas, mouse);
+        p.draw(ctx);
+      });
+      frameCount++;
+      if (frameCount % 2 === 0) connectParticles();
       frameId = requestAnimationFrame(animate);
     };
 

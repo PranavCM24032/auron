@@ -1,24 +1,32 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 
+function getInitialDarkMode(): boolean {
+  if (typeof window === "undefined") return true;
+  const saved = localStorage.getItem("theme");
+  return saved ? saved === "dark" : true;
+}
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isDark, setIsDark] = useState(true);
+  const [isDark, setIsDark] = useState(getInitialDarkMode);
+  const themeSyncedRef = useRef(false);
   const pathname = usePathname();
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    const shouldBeDark = savedTheme ? savedTheme === "dark" : true;
-    setIsDark(shouldBeDark);
-    if (shouldBeDark) {
-      document.documentElement.removeAttribute("data-theme");
-    } else {
-      document.documentElement.setAttribute("data-theme", "light");
+    if (!themeSyncedRef.current) {
+      themeSyncedRef.current = true;
+      const shouldBeDark = isDark;
+      if (shouldBeDark) {
+        document.documentElement.removeAttribute("data-theme");
+      } else {
+        document.documentElement.setAttribute("data-theme", "light");
+      }
     }
 
     const handleScroll = () => {
@@ -27,6 +35,7 @@ export default function Navbar() {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const toggleTheme = useCallback(() => {
@@ -139,7 +148,8 @@ export default function Navbar() {
             className={`hamburger ${mobileMenuOpen ? "active" : ""}`}
             id="hamburger"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Open Navigation Menu"
+            aria-label={mobileMenuOpen ? "Close Navigation Menu" : "Open Navigation Menu"}
+            aria-expanded={mobileMenuOpen}
           >
             <span></span>
             <span></span>

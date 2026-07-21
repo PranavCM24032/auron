@@ -3,7 +3,7 @@ import Achievements from "@/components/Achievements";
 import Alumni from "@/components/Alumni";
 
 export const metadata: Metadata = {
-  title: "Achievements & Recognition | AURON Forum",
+  title: "Achievements & Recognition",
   description: "Celebrate our Smart India Hackathon trophies, elite ACM ICPC regionals rank, and success placements of our graduates.",
 };
 

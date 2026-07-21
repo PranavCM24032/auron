@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import VisionMission from "@/components/VisionMission";
 
 export const metadata: Metadata = {
-  title: "Vision & Mission | AURON Forum",
+  title: "Vision & Mission",
   description: "Learn about the mission, values, and vision driving the Technical & Non-Technical Wings of the AURON Forum.",
 };
 

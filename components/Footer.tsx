@@ -6,7 +6,7 @@ import { Mail, Phone, MapPin, Clock } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="footer" id="contact">
+    <footer className="footer">
       {/* Ambient background blur and glow */}
       <div className="footer-bg-glow" />
 

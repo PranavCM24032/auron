@@ -64,6 +64,7 @@ export default function GlobalModals() {
       )}
 
       <Lightbox 
+        key={lightboxOpen ? `open-${lightboxIndex}` : 'closed'}
         isOpen={lightboxOpen} 
         onClose={() => setLightboxOpen(false)} 
         initialIndex={lightboxIndex} 

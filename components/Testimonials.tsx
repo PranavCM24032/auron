@@ -33,7 +33,9 @@ export default function Testimonials() {
   };
 
   useEffect(() => {
-    const timer = setInterval(handleNext, 6500);
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % TESTIMONIALS_DATA.length);
+    }, 6500);
     return () => clearInterval(timer);
   }, []);
 
