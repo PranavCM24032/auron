@@ -18,7 +18,7 @@ function createSparkle(container: HTMLDivElement) {
 }
 
 export default function Committee() {
-  const [selectedWing, setSelectedWing] = useState<'all' | 'technical' | 'non-technical'>('all');
+  const [selectedWing, setSelectedWing] = useState<'advisor' | 'technical' | 'non-technical'>('advisor');
   const containerRef = useRef<HTMLDivElement>(null);
   const sparklesRef = useRef<HTMLDivElement>(null);
 
@@ -31,7 +31,6 @@ export default function Committee() {
 
   // Filters committee data
   const filteredMembers = COMMITTEE_DATA.filter((m) => {
-    if (selectedWing === 'all') return true;
     return m.wing === selectedWing;
   });
 
@@ -78,8 +77,8 @@ export default function Committee() {
         {/* Filters */}
         <div className="gallery-filters reveal-element" style={{ marginBottom: "50px" }}>
           <button
-            className={`wing-filter-btn magnetic-element ${selectedWing === 'all' ? 'active' : ''}`}
-            onClick={() => setSelectedWing('all')}
+            className={`wing-filter-btn magnetic-element ${selectedWing === 'advisor' ? 'active' : ''}`}
+            onClick={() => setSelectedWing('advisor')}
           >
             Faculty
           </button>
